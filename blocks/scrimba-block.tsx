@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import "./style.css";
 import { Button, Text, Link } from "@primer/react";
 
-const isDev = import.meta?.url.includes("localhost:");
+const isDev = import.meta?.url
 const SCRIMBA_BASE_URL = isDev
   ? "https://dev.scrimba.com:3000"
   : "https://scrimba.com";
