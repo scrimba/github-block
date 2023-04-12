@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import "./style.css";
 import { Button, Text, Link } from "@primer/react";
 
-const SCRIMBA_BASE_URL = import.meta?.env?.DEV
+const isDev = import.meta?.url.includes("localhost:");
+const SCRIMBA_BASE_URL = isDev
   ? "https://dev.scrimba.com:3000"
   : "https://scrimba.com";
 const SCRIMBA_URL = `${SCRIMBA_BASE_URL}/new/htmlblocks`;
@@ -53,7 +54,8 @@ export default function (props: FolderBlockProps) {
       if (!tree && !all) {
         return [{ ...context, type: "blob", content: props.content }];
       }
-      return getFilesRecursive(context.path);
+      let path = !tree ? "/" : context.path || "/";
+      return getFilesRecursive(path);
     },
     [context.repo, context.owner, context.sha, files, tree, props.content]
   );
