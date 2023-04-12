@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import "./style.css";
 import { Button, Text, Link } from "@primer/react";
 
-const SCRIMBA_BASE_URL = import.meta.env.DEV
+const SCRIMBA_BASE_URL = import.meta?.env?.DEV
   ? "https://dev.scrimba.com:3000"
   : "https://scrimba.com";
 const SCRIMBA_URL = `${SCRIMBA_BASE_URL}/new/htmlblocks`;
