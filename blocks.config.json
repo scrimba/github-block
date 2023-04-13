@@ -3,7 +3,7 @@
     "type": "file",
     "id": "scrim-file-block",
     "title": "Scrimba File Block",
-    "description": "Record interactive code-casts inside Github",
+    "description": "Record interactive scrims (screencasts, code-casts, videos, audio) inside Github",
     "entry": "blocks/scrimba-block.tsx",
     "matches": ["*"],
     "example_path": "https://github.com/imba/imba/README.md"
@@ -12,7 +12,7 @@
     "type": "folder",
     "id": "scrim-folder-block",
     "title": "Scrimba Folder Block",
-    "description": "Record interactive code-casts inside Github",
+    "description": "Record interactive scrims (screencasts, code-casts, videos, audio) inside Github",
     "entry": "blocks/scrimba-block.tsx",
     "matches": ["*"],
     "example_path": "https://github.com/imba/imba"
