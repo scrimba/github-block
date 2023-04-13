@@ -1,19 +1,33 @@
 import { tw } from "twind";
-import { FolderBlockProps } from "@githubnext/blocks";
+import { FileBlockProps, FolderBlockProps } from "@githubnext/blocks";
 import { useCallback, useEffect, useRef, useState } from "react";
-import "./style.css";
-import { Button, Text, Link } from "@primer/react";
+import { Button, Flash } from "@primer/react";
 
-const isDev = import.meta?.url
+const isDev = import.meta?.url;
 const SCRIMBA_BASE_URL = isDev
   ? "https://dev.scrimba.com:3000"
   : "https://scrimba.com";
 const SCRIMBA_URL = `${SCRIMBA_BASE_URL}/new/htmlblocks`;
 
-export default function (props: FolderBlockProps) {
+function copyToClipboard(text) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand("copy");
+  } catch (err) {
+    console.error("Unable to copy to clipboard", err);
+  }
+  document.body.removeChild(textArea);
+}
+
+export default function (props: FolderBlockProps | FileBlockProps) {
   const { tree, context, onRequestGitHubData, files } = props;
   const [scrimMounted, setScrimMounted] = useState(false);
-  const [scrimRecorded, setScrimRecorded] = useState("");
+  const [scrimRecorded, setScrimRecorded] = useState(false);
+  const [scrimEmbedCopied, setScrimEmbedCopied] = useState(false);
 
   const frame = useRef(null);
 
@@ -128,13 +142,24 @@ export default function (props: FolderBlockProps) {
       listenToRecorded();
     }
   }, [frame]);
-  const publish = useCallback(() => {
+  const embed = () => {
+    copyToClipboard(
+      `<iframe src="${url}" width="100%" height="700px"></iframe>`
+    );
+    setScrimEmbedCopied(true);
+  };
+  const publish = () => {
     sendData({ action: "publish" }, true);
-  }, [sendData]);
+    embed();
+  };
 
+  const url = `${SCRIMBA_BASE_URL}/scrim/${scrimRecorded}`;
   return (
     <div className={tw(`w-full h-full`)} id="example-block-code-block">
       <div className={tw(`flex w-full h-full overflow-x-hidden flex-col`)}>
+        {scrimEmbedCopied ? (
+          <Flash variant="success">Scrim embed code copied to clipboard</Flash>
+        ) : null}
         <div className={tw(`flex ai-center jc-between flex-row`)}>
           {scrimMounted ? null : (
             <Button onClick={reload}>Not working? Reload</Button>
@@ -142,18 +167,10 @@ export default function (props: FolderBlockProps) {
           <Button onClick={loadFiles}>Load all files</Button>
         </div>
         {scrimRecorded ? (
-          <Text>
-            <Button onClick={publish} className={tw("inline-block")}>
-              Publish the scrim{" "}
-            </Button>
-            to make it available for everyone at{" "}
-            <Link
-              href={`${SCRIMBA_BASE_URL}/scrim/${scrimRecorded}`}
-            >{`${SCRIMBA_BASE_URL}/scrim/${scrimRecorded}`}</Link>
-          </Text>
+          <Button onClick={publish}>Publish and copy embed</Button>
         ) : null}
         <iframe
-          allow="microphone;"
+          allow="microphone;fullscreen;"
           ref={frame}
           src={SCRIMBA_URL}
           className={tw`my-2 h-full w-full`}
